@@ -1,3 +1,7 @@
+using Bll.Services.Abstractions;
+using Bll.Services.Concretes;
+using Dal.Abstractions;
+using Dal.Concretes;
 using Dal.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +16,8 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ContactReport
@@ -29,7 +35,10 @@ namespace ContactReport
         public void ConfigureServices(IServiceCollection _services)
         {
 
-            _services.AddControllers();
+            _services.AddControllers().AddJsonOptions(_options =>
+            {
+                _options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+            });
             _services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ContactReport", Version = "v1" });
@@ -39,6 +48,13 @@ namespace ContactReport
             {
                 _options.UseNpgsql(_Configuration.GetConnectionString("Postgre"));
             });
+
+            _services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            _services.AddScoped<IContactService, ContactService>();
+
+            _services.AddScoped<IContactInformationService, ContactInformationService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

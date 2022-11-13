@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dal.Migrations
 {
     [DbContext(typeof(ContactDbContext))]
-    [Migration("20221112174834_InitialMigration")]
+    [Migration("20221113123446_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,6 +56,9 @@ namespace Dal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("ContactId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("ContactInformation")
                         .HasColumnType("text");
 
@@ -73,22 +76,21 @@ namespace Dal.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ContactId");
+
                     b.HasIndex("ContactTypeId");
 
                     b.ToTable("ContactInfos");
                 });
 
-            modelBuilder.Entity("Entity.Models.ContactInfoContact", b =>
+            modelBuilder.Entity("Entity.Models.ContactType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ContactId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ContactInfoId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("ContactTypeName")
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
@@ -101,53 +103,31 @@ namespace Dal.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ContactId");
-
-                    b.HasIndex("ContactInfoId");
-
-                    b.ToTable("ContactInfoContacts");
-                });
-
-            modelBuilder.Entity("Entity.Models.ContactType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ContactTypeName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
                     b.ToTable("ContactTypes");
                 });
 
             modelBuilder.Entity("Entity.Models.ContactInfo", b =>
                 {
+                    b.HasOne("Entity.Models.Contact", "Contact")
+                        .WithMany("ContactInfos")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Entity.Models.ContactType", "ContactType")
                         .WithMany()
                         .HasForeignKey("ContactTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Contact");
+
                     b.Navigation("ContactType");
                 });
 
-            modelBuilder.Entity("Entity.Models.ContactInfoContact", b =>
+            modelBuilder.Entity("Entity.Models.Contact", b =>
                 {
-                    b.HasOne("Entity.Models.Contact", "Contact")
-                        .WithMany()
-                        .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Entity.Models.ContactInfo", "ContactInfo")
-                        .WithMany()
-                        .HasForeignKey("ContactInfoId");
-
-                    b.Navigation("Contact");
-
-                    b.Navigation("ContactInfo");
+                    b.Navigation("ContactInfos");
                 });
 #pragma warning restore 612, 618
         }

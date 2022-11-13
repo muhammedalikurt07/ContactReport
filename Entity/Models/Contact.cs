@@ -1,4 +1,5 @@
 ﻿using Entity.Base;
+using System.Collections.Generic;
 
 namespace Entity.Models
 {
@@ -7,5 +8,6 @@ namespace Entity.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string CompanyName { get; set; }
+        public virtual ICollection<ContactInfo> ContactInfos { get; set; }
     }
 }

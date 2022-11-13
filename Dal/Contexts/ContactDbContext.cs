@@ -17,7 +17,6 @@ namespace Dal.Contexts
 
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<ContactInfo> ContactInfos { get; set; }
-        public virtual DbSet<ContactInfoContact> ContactInfoContacts { get; set; }
         public virtual DbSet<ContactType> ContactTypes { get; set; }
     }
 }
