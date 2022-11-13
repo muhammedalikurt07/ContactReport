@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Entity.Base;
+using System;
 
 namespace Entity.Models
 {
-    public class ContactType
+    public class ContactType : EntityBase
     {
-        public Guid Id { get; set; }
         public string ContactTypeName { get; set; }
     }
 }

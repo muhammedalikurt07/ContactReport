@@ -10,5 +10,8 @@ namespace Entity.Models
         [ForeignKey("ContactType")]
         public Guid ContactTypeId { get; set; }
         public ContactType ContactType { get; set; }
+        [ForeignKey("Contact")]
+        public Guid ContactId { get; set; }
+        public Contact Contact { get; set; }
     }
 }
